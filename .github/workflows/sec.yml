@@ -1,4 +1,3 @@
-yaml
 name: DevSecOps Security Pipeline
 
 # متى يعمل الخط؟ عند أي رفع (Push) للكود على الفرع الرئيسي
