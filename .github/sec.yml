@@ -1,0 +1,36 @@
+yaml
+name: DevSecOps Security Pipeline
+
+# متى يعمل الخط؟ عند أي رفع (Push) للكود على الفرع الرئيسي
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  security-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. سحب ملفات المشروع
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. فحص ملفات السحابة (Terraform) بأداة Checkov
+      - name: Run Checkov IaC Security Scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          framework: terraform
+
+      # 3. بناء حاوية Docker
+      - name: Build Docker Image
+        run: docker build -t my-secure-app:latest .
+
+      # 4. فحص حاوية Docker بحثاً عن الثغرات بأداة Trivy
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'my-secure-app:latest'
+          format: 'table'
+          exit-code: '1' # إيقاف العملية فوراً إذا وُجدت ثغرات خطيرة
+          severity: 'CRITICAL,HIGH'
