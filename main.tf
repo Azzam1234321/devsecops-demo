@@ -10,6 +10,6 @@ resource "aws_s3_bucket" "my_company_data" {
 resource "aws_s3_bucket_public_access_block" "bad_security" {
   bucket = aws_s3_bucket.my_company_data.id
 
-  block_public_acls       = false
-  block_public_policy     = false
+  block_public_acls       = true
+  block_public_policy     = true
 }
