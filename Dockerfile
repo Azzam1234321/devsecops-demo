@@ -1,17 +1,16 @@
-FROM python:3.11-slim
-
+FROM python:3.11-alpine
 
 WORKDIR /app
 
+RUN apk update && apk upgrade --no-cache && \
+    pip install --no-cache-dir --upgrade pip setuptools
 
 COPY app.py .
 
 
-RUN useradd -m appuser
+RUN adduser -D appuser
 USER appuser
 
-
 EXPOSE 8080
-
 
 CMD ["python", "app.py"]
